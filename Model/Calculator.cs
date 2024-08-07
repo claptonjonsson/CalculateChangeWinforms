@@ -95,13 +95,13 @@ namespace CalculateChangeWinforms.Model
         {
             if (price > moneyGiven)
             {
-                MessageBox.Show("According to the data that you entered, you effectively robbed the store. Either that, or you typed incorrect input. This program will assume incorrect input.\n"
-                      + "Please try again and enter an amount of money given higher than the price of the purchase.\n");
+                MessageBox.Show("According to the data that you entered, you effectively robbed the store. Either that, or you typed incorrect input. This program will assume incorrect input.\n\n"
+                      + "Please try again and enter an amount of money given higher than the price of the purchase.\n", "No change");
                 return false;
             }
             else if (price == moneyGiven)
             {
-                MessageBox.Show("According to the data entered, you paid the same price as the cost of the purchase. You don't need this application to tell you that you get no change back. Try entering different values.\n");
+                MessageBox.Show("According to the data entered, you paid the same price as the cost of the purchase. You don't need this application to tell you that you get no change back. Try entering other values.\n", "No change");
                 return false;
             }
             else
