@@ -13,7 +13,7 @@ namespace CalculateChangeWinforms.Model
             new Currency {CurrencyName = "dollar", CurrencyCode = "USD", HighestCoin = 0, Values = new int[] { 100, 50, 20, 10, 5, 2, 1 } }                  /*https://www.bep.gov/currency/circulating-currency*/
         };
 
-        //Passes the currency codes to the CurrencyInput() method in the Calculator class.
+        //Passes the currency codes to the Currency combobox.
         public static string[] GetCurrencyCodes()
         {
             List<string> currencyCodes = new();
@@ -26,12 +26,14 @@ namespace CalculateChangeWinforms.Model
             return currencyCodesArray;
         }
 
+        //Passes the name of selected currency to the Currency property of the Calculator class.
         public static string GetCurrencyName(string currencyCode)
         {
             Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
-            return currency.CurrencyName;
+            return currency.CurrencyName.ToLower();
         }
 
+        //Passes the highest coin value to the Currency property of the Calculator class.
         public static int GetHighestCoin(string currencyCode)
         {
             Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
@@ -44,7 +46,7 @@ namespace CalculateChangeWinforms.Model
             Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
             int[] values = currency.Values;
             Array.Sort(values);
-            //The values must be sorted in decending order so that the highest one is used first in the CalculateChange() method in the Calculator class.
+            //The values must be sorted in decending order so that the highest one is processed first in the CalculateChange() method in the Calculator class.
             Array.Reverse(values);
             return values;
         }

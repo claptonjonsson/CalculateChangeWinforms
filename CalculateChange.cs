@@ -10,6 +10,9 @@ namespace CalculateChangeWinforms
             cbCurrency.Items.AddRange(Currencies.GetCurrencyCodes());
         }
 
+        //When the Calculate button is clicked, values are passed from
+        //the input fields to the Calculator object and, if inputs are vaid,
+        //the change is calculated and displayed. If not valid, errors are shown.
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             Calculator calculator = new();
@@ -23,7 +26,7 @@ namespace CalculateChangeWinforms
                 {
                     lblDisplayInput.Text = "";
                     lblDisplayInfo.Text = calculator.ReturnCalculation();
-                    btnCopy.Enabled = true;
+                    btnCopy.Enabled = true; //Copy button only enabled when there are results to copy.
                 }
             }
             else
@@ -33,6 +36,7 @@ namespace CalculateChangeWinforms
             }
         }
 
+        //Button to clear input fields before a new calculation.
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbPrice.Clear();
@@ -42,11 +46,13 @@ namespace CalculateChangeWinforms
             lblDisplayInput.Text = "Fill in the input fields and press 'Calculate'.";
         }
 
+        //Button to copy the displayed calculation results.
         private void btnCopy_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Clipboard.SetText(lblDisplayInfo.Text);
         }
 
+        //Button to quit the program.
         private void btnQuit_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);

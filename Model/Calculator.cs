@@ -10,8 +10,14 @@ namespace CalculateChangeWinforms.Model
         private int moneyGiven;
         private string inputErrors = "";
 
-        #region Properties (setters handle input validation)
+        #region Properties
 
+        //Each property setter handles input validation.
+        //If the input is not valid, an error message is passed to the
+        //InputErrors property and displayed together with other errors.
+
+        //When a currency is selected, the Currency property uses this value
+        //to also get the name of the currency and its highest valued coin.
         public string Currency
         {
             get { return currency; }
@@ -68,12 +74,11 @@ namespace CalculateChangeWinforms.Model
 
         public string InputErrors { get; set; }
 
-        #endregion Properties (setters handle input validation)
+        #endregion Properties
 
-        #region Return data for display.
+        #region Return data for display
 
-        //Prints the result of the CalculateChange() method
-        //(which calculates the change to be returned).
+        //Passes on the result of the CalculateChange() method modified for display.
         public string ReturnCalculation()
         {
             string calcResult = "You get back the following "
@@ -86,11 +91,11 @@ namespace CalculateChangeWinforms.Model
             return calcResult;
         }
 
-        #endregion Return data for display.
+        #endregion Return data for display
 
-        #region Calculation related methods.
+        #region Calculation-related methods
 
-        //Checks if the money given is not lower than or equal to the price of the items. If it is, calculation is not made until receiving correct input.
+        //Checks if the money given is lower than or equal to the price of the items.
         public bool ShouldChangeBeGiven()
         {
             if (price > moneyGiven)
@@ -110,7 +115,8 @@ namespace CalculateChangeWinforms.Model
             }
         }
 
-        //Calculates what change should be returned depending on user input and values stored in the Currencies class dictionary.
+        //Calculates what change should be returned depending on user input and
+        //values stored in the Currencies class.
         private string[] CalculateChange()
         {
             int[] values = Currencies.GetCurrencyValues(currency);
@@ -129,7 +135,7 @@ namespace CalculateChangeWinforms.Model
                     {
                         returnChange += "coin";
                     }
-                    if (change/value > 1)
+                    if (change / value > 1)
                     {
                         returnChange += "s\n";
                     }
@@ -145,6 +151,6 @@ namespace CalculateChangeWinforms.Model
             return changeToBeReturned;
         }
 
-        #endregion Calculation related methods.
+        #endregion Calculation-related methods
     }
 }
