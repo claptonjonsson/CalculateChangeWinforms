@@ -4,8 +4,8 @@ namespace CalculateChangeWinforms.Model
     public static class Currencies
     {
         //Here currencies are added/removed.
-        //Currency code, the highest valued coin (values are counted as bills above this number)
-        //and the currency values (bills and coins) constitue a currency.
+        //Currency name, code, the highest valued coin (values are counted as bills above this number)
+        //and the currency values (of bills and coins) constitue a currency.
         private static List<Currency> currencies = new()
         {
             new Currency {CurrencyName = "euro", CurrencyCode = "EUR", HighestCoin = 2, Values = new int[] { 200, 100, 50, 20, 10, 5, 2, 1 } },            /*https://www.ecb.europa.eu/euro/coins/html/index.en.html*/
