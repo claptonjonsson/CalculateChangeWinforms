@@ -4,91 +4,94 @@ namespace CalculateChangeWinforms.Model
     public class Calculator
     {
         private string currency;
+        private string currencyName;
+        private int highestCoin; //Highest coin value to determine if bill or coin.
         private int price;
         private int moneyGiven;
+        private string inputErrors = "";
 
-        public string Currency {get; set;}
-        public int Price {get; set;}
-        public int MoneyGiven {get; set;}
+        #region Properties (setters handle input validation)
 
+        public string Currency
+        {
+            get { return currency; }
+            set
+            {
+                if (value != "")
+                {
+                    currency = value;
+                    currencyName = Currencies.GetCurrencyName(value);
+                    highestCoin = Currencies.GetHighestCoin(value);
+                }
+                else
+                {
+                    InputErrors += "* Currency: You did not select a currency.\n\n";
+                }
+            }
+        }
+
+        public string Price
+        {
+            get { return price.ToString(); }
+            set
+            {
+                int num;
+                bool isInt = int.TryParse(value, out num);
+                if (value != "" && isInt)
+                {
+                    price = num;
+                }
+                else
+                {
+                    InputErrors += "* Price: You did not enter a whole number.\n\n";
+                }
+            }
+        }
+
+        public string MoneyGiven
+        {
+            get { return moneyGiven.ToString(); }
+            set
+            {
+                int num;
+                bool isInt = int.TryParse(value, out num);
+                if (value != "" && isInt)
+                {
+                    moneyGiven = num;
+                }
+                else
+                {
+                    InputErrors += "* Money given: You did not enter a whole number.\n\n";
+                }
+            }
+        }
+
+        public string InputErrors { get; set; }
+
+        #endregion Properties (setters handle input validation)
 
         #region Return data for display.
-
-        //Returns user input
-        public string ReturnInput()
-        {
-            return "You purchased products for " +
-                   $"{Price} {Currency} and gave {MoneyGiven} {currency}.\n";
-        }
 
         //Prints the result of the CalculateChange() method
         //(which calculates the change to be returned).
         public string ReturnCalculation()
         {
-            string calcResult = "You should get back the following "
-               + $"bills and/or coins in {Currency}:\n";
+            string calcResult = "You get back the following "
+               + "bills and/or coins:\n\n";
             string[] billsAndCoins = CalculateChange();
             foreach (string billAndCoin in billsAndCoins)
             {
-               calcResult += billAndCoin + "\n";
+                calcResult += billAndCoin + "\n";
             }
             return calcResult;
         }
 
-        #endregion
-
-        #region Values checks
-
-        public bool CheckCurrencyInput(ComboBox comboBox)
-        {
-            string[] currencyCodes = Currencies.GetCurrencyCodes();
-            foreach (string code in currencyCodes)
-            {
-                if (comboBox.Text == code)
-                {
-                    Currency = comboBox.Text;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool CheckPriceInput(TextBox textBox)
-        {
-            int num;
-            bool isInt = int.TryParse(textBox.Text, out num);
-            if (textBox.Text != "" && isInt)
-            {
-                Price = num;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool CheckMoneyGivenInput(TextBox textBox)
-        {
-           int num;
-           bool isInt = int.TryParse(textBox.Text, out num);
-           if (textBox.Text != "" && isInt)
-           {
-               MoneyGiven = num;
-               return true;
-           }
-           else
-           {
-               return false;
-           }
-        }
-
-        #endregion
+        #endregion Return data for display.
 
         #region Calculation related methods.
 
         //Checks if the money given is not lower than or equal to the price of the items. If it is, calculation is not made until receiving correct input.
-        public bool CheckIfChangeShouldBeGiven()
+        public bool ShouldChangeBeGiven()
         {
             if (price > moneyGiven)
             {
@@ -117,16 +120,31 @@ namespace CalculateChangeWinforms.Model
             {
                 if (change >= value && change > 0)
                 {
-                    string returnChange = $"{change/value} x {value}\n";
+                    string returnChange = $"{change / value} x {value}-{currencyName} ";
+                    if (value > highestCoin)
+                    {
+                        returnChange += "bill";
+                    }
+                    else
+                    {
+                        returnChange += "coin";
+                    }
+                    if (change/value > 1)
+                    {
+                        returnChange += "s\n";
+                    }
+                    else
+                    {
+                        returnChange += "\n";
+                    }
                     changeOrganized.Add(returnChange);
-                    change = change-change/value * value;
+                    change = change - change / value * value;
                 }
             }
             string[] changeToBeReturned = changeOrganized.ToArray();
             return changeToBeReturned;
         }
 
-        #endregion
-
+        #endregion Calculation related methods.
     }
 }

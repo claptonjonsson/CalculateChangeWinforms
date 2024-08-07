@@ -3,37 +3,50 @@ namespace CalculateChangeWinforms.Model
 {
     public static class Currencies
     {
-        //Here currencies are added/removed. The key is the currency code and the value an array with the values of the bills and coins.
-        private static Dictionary<string, int[]> currencyDic = new()
+        //Here currencies are added/removed.
+        //Currency code, the highest valued coin (values are counted as bills above this number)
+        //and the currency values (bills and coins) constitue a currency.
+        private static List<Currency> currencies = new()
         {
-            {"EUR", new int[] {200, 100, 50, 20, 10, 5, 2, 1 }},
-            {"SEK", new int[] {1000, 500, 200, 100, 50, 20, 10, 5, 2, 1}},
-            {"USD", new int[] {100, 50, 20, 10, 5, 2, 1}}
+            new Currency {CurrencyName = "euro", CurrencyCode = "EUR", HighestCoin = 2, Values = new int[] { 200, 100, 50, 20, 10, 5, 2, 1 } },            /*https://www.ecb.europa.eu/euro/coins/html/index.en.html*/
+            new Currency {CurrencyName = "krona", CurrencyCode = "SEK", HighestCoin = 10, Values = new int[] { 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1 } }, /*https://archive.riksbank.se/sv/Sedlar--mynt/Mynt/index.html*/
+            new Currency {CurrencyName = "dollar", CurrencyCode = "USD", HighestCoin = 0, Values = new int[] { 100, 50, 20, 10, 5, 2, 1 } }                  /*https://www.bep.gov/currency/circulating-currency*/
         };
 
-        //Passes the currency codes in the above dictionary to the CurrencyInput() method in the Calculator class.
+        //Passes the currency codes to the CurrencyInput() method in the Calculator class.
         public static string[] GetCurrencyCodes()
         {
-            string[] currencyCodesArray = currencyDic.Keys.ToArray();
+            List<string> currencyCodes = new();
+            foreach (Currency currency in currencies)
+            {
+                currencyCodes.Add(currency.CurrencyCode);
+            }
+            string[] currencyCodesArray = currencyCodes.ToArray();
             Array.Sort(currencyCodesArray);
             return currencyCodesArray;
+        }
+
+        public static string GetCurrencyName(string currencyCode)
+        {
+            Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
+            return currency.CurrencyName;
+        }
+
+        public static int GetHighestCoin(string currencyCode)
+        {
+            Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
+            return currency.HighestCoin;
         }
 
         //Passes the specic values for the chosen currency to the CalculateChange() method in the Calculator class.
         public static int[] GetCurrencyValues(string currencyCode)
         {
-            int[] values;
-            //Checking that the argument is a valid key. The relevant input is already checked in the CurrencyInput() method in the Calculator class but it never hurts to be extra careful.
-            if (!currencyDic.TryGetValue(currencyCode, out values))
-            {
-                MessageBox.Show("You entered an incorrect currency.\n");
-                return new int[] { 0 };
-            }
+            Currency currency = currencies.First(c => c.CurrencyCode == currencyCode);
+            int[] values = currency.Values;
             Array.Sort(values);
             //The values must be sorted in decending order so that the highest one is used first in the CalculateChange() method in the Calculator class.
             Array.Reverse(values);
             return values;
         }
-
     }
 }

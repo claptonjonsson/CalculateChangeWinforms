@@ -13,28 +13,43 @@ namespace CalculateChangeWinforms
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             Calculator calculator = new();
-            if (
-                !calculator.CheckCurrencyInput(cbCurrency) &&
-                !calculator.CheckPriceInput(tbPrice) &&
-                !calculator.CheckMoneyGivenInput(tbMoneyGiven)
-                )
+            calculator.Currency = cbCurrency.Text;
+            calculator.Price = tbPrice.Text;
+            calculator.MoneyGiven = tbMoneyGiven.Text;
+
+            if (calculator.InputErrors == null)
             {
-                if (!calculator.CheckIfChangeShouldBeGiven())
+                if (calculator.ShouldChangeBeGiven())
                 {
-                    lblDisplayInfo.Text = calculator.ReturnInput()
-                                        + calculator.ReturnCalculation();
+                    lblDisplayInput.Text = "";
+                    lblDisplayInfo.Text = calculator.ReturnCalculation();
+                    btnCopy.Enabled = true;
                 }
             }
             else
             {
-                MessageBox.Show(
-                        "Somethng went wrong.\n" +
-                        "Either you have not selected a currency\n" +
-                        "or you did not enter whole numbers\n" +
-                        "or you entered a number so large that " +
-                        "application cannot handle it."
-                        );
+                MessageBox.Show(calculator.InputErrors, "Error");
+                calculator.InputErrors = "";
             }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            tbPrice.Clear();
+            tbMoneyGiven.Clear();
+            lblDisplayInfo.Text = "";
+            btnCopy.Enabled = false;
+            lblDisplayInput.Text = "Fill in the input fields and press 'Calculate'.";
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(lblDisplayInfo.Text);
+        }
+
+        private void btnQuit_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
